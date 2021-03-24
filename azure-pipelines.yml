@@ -1,9 +1,5 @@
-# ASP.NET Core
-# Build and test ASP.NET Core projects targeting .NET Core.
-# Add steps that run tests, create a NuGet package, deploy, and more:
-# https://docs.microsoft.com/azure/devops/pipelines/languages/dotnet-core
-
 trigger:
+<<<<<<< HEAD
 # - master
 - '*'
 
@@ -12,6 +8,14 @@ pool:
   vmImage: 'ubuntu-18.04'
   demands:
   - npm
+=======
+- '*'
+
+pool:
+  vmImage: 'ubuntu-18.04'
+  demands:
+    - npm
+>>>>>>> master
 
 variables:
   buildConfiguration: 'Release'
@@ -19,12 +23,18 @@ variables:
   dotnetSdkVersion: '3.1.300'
 
 steps:
+<<<<<<< HEAD
 # - script: dotnet build --configuration $(buildConfiguration)
 #   displayName: 'dotnet build $(buildConfiguration)'
 - task: UseDotNet@2
   displayName: 'Use .NET Core SDK $(dotnetSdkVersion)'
   inputs:
     packageType: sdk
+=======
+- task: UseDotNet@2
+  displayName: 'Use .NET Core SDK $(dotnetSdkVersion)'
+  inputs:
+>>>>>>> master
     version: '$(dotnetSdkVersion)'
 
 - task: Npm@1
@@ -32,7 +42,11 @@ steps:
   inputs:
     verbose: false
 
+<<<<<<< HEAD
 - script: './node_modules/.bin/node-sass $(wwwrootDir) --output $(wwwrootDir)' 
+=======
+- script: './node_modules/.bin/node-sass $(wwwrootDir) --output $(wwwrootDir)'
+>>>>>>> master
   displayName: 'Compile Sass assets'
 
 - task: gulp@1
@@ -44,6 +58,7 @@ steps:
 
 - task: DotNetCoreCLI@2
   displayName: 'Restore project dependencies'
+<<<<<<< HEAD
   inputs: 
     command: 'restore'
     projects: '**/*.csproj'
@@ -71,6 +86,27 @@ steps:
 - template: templates/build.yml
   parameters:
     buildConfiguration: 'Release'    
+=======
+  inputs:
+    command: 'restore'
+    projects: '**/*.csproj'
+
+- task: DotNetCoreCLI@2
+  displayName: 'Build the project - $(buildConfiguration)'
+  inputs:
+    command: 'build'
+    arguments: '--no-restore --configuration $(buildConfiguration)'
+    projects: '**/*.csproj'
+
+- task: DotNetCoreCLI@2
+  displayName: 'Publish the project - $(buildConfiguration)'
+  inputs:
+    command: 'publish'
+    projects: '**/*.csproj'
+    publishWebProjects: false
+    arguments: '--no-build --configuration $(buildConfiguration) --output $(Build.ArtifactStagingDirectory)/$(buildConfiguration)'
+    zipAfterPublish: true
+>>>>>>> master
 
 - task: PublishBuildArtifacts@1
   displayName: 'Publish Artifact: drop'
